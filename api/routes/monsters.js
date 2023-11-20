@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
-const Product = require('../models/product'); 
+const Monster = require('../models/monster'); 
 
 router.get('/', (req, res, next) => 
 {
-    Product.find()
+    Monster.find()
     .exec()
     .then
     (docs => 
@@ -27,16 +27,19 @@ router.get('/', (req, res, next) =>
 )
  
 router.post('/', (req, res, next) => {
-    const product = new Product({
+    const monster = new Monster({
         _id: new mongoose.Types.ObjectId(),
+        monsterType: req.body.monsterType,
         name: req.body.name,
-        price: req.body.price
+        alignment: req.body.alignment,
+        hit_points: req.body.hit_points,
+        actions: req.body.actions
     });
-    product.save().then(result =>{
+    monster.save().then(result =>{
         console.log(result);
         res.status(201).json({
-            message: 'Handling POST requests to /products',
-            createdProduct: result
+            message: 'Handling POST requests to /monsters',
+            createdMonster: result
         });
     }).catch(err => {
         console.log(err);
@@ -47,9 +50,9 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.get('/:productId', (req, res, next) => {
-    const id = req.params.productId;
-    Product.findById(id).exec().then(doc => { console.log("From database", doc); 
+router.get('/:monsterId', (req, res, next) => {
+    const id = req.params.monsterId;
+    Monster.findById(id).exec().then(doc => { console.log("From database", doc); 
     if (doc) {
         res.status(200).json(doc);
     } else {
@@ -62,14 +65,14 @@ router.get('/:productId', (req, res, next) => {
     })
 });
 
-router.patch('/:productId', (req, res, next) => {
-    const id = req.params.productId;
+router.patch('/:monsterId', (req, res, next) => {
+    const id = req.params.monsterId;
     const updateOps = {};
     for(const ops of req.body){
         updateOps[ops.propName] = ops.value;
     }
 
-    Product.updateOne({ _id: id }, {
+    Monster.updateOne({ _id: id }, {
         $set: updateOps})
     .exec()
     .then(result => {
@@ -83,9 +86,9 @@ router.patch('/:productId', (req, res, next) => {
 });
 
 
-router.delete('/:productId', (req, res, next) => {
-    const id = req.params.productId;
-    Product.deleteOne({ _id: id })
+router.delete('/:monsterId', (req, res, next) => {
+    const id = req.params.monsterId;
+    Monster.deleteOne({ _id: id })
     .exec()
     .then(result => {
         res.status(200).json(result);

@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 
-const productRoutes = require('./api/routes/products')
+const monsterRoutes = require('./api/routes/monsters')
 const orderRoutes = require('./api/routes/orders')
 
 mongoose.connect('mongodb+srv://miguel:tan@dnd.6mndm0z.mongodb.net/?retryWrites=true&w=majority', {
@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 });
 
 //routes which should handle requests
-app.use('/products', productRoutes);
+app.use('/monsters', monsterRoutes);
 app.use('/orders', orderRoutes);
 
 
