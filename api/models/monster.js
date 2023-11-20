@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const monsterSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    monsterType: String,
-    name: String,
-    alignment: String,
-    hit_points: String,
-    actions: String
+    monsterType: { type: String, required: true},
+    name: { type: String, required: true},
+    alignment: { type: String, required: true},
+    hit_points: { type: String, required: true},
+    actions: { type: String, required: true}
 
 });
 
