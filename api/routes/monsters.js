@@ -50,13 +50,13 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.get('/:monsterId', (req, res, next) => {
-    const id = req.params.monsterId;
-    Monster.findById(id).exec().then(doc => { console.log("From database", doc); 
+router.get('/:alignment', (req, res, next) => {
+    const alignment = req.params.alignment;
+    Monster.findByAlignment(alignment).exec().then(doc => { console.log("From database", doc); 
     if (doc) {
         res.status(200).json(doc);
     } else {
-        res.status(404).json({message: 'No valid entry found for provided ID'});
+        res.status(404).json({message: 'No valid entry found for provided Alignment'});
     }
 })
     .catch(err => {
@@ -65,15 +65,38 @@ router.get('/:monsterId', (req, res, next) => {
     })
 });
 
-router.patch('/:monsterId', (req, res, next) => {
-    const id = req.params.monsterId;
+router.get('/:alignment/:name', (req, res, next) => {
+    const alignment = req.params.alignment;
+    const name = req.params.name;
+
+    Monster.findByAlignmentAndName(alignment, name)
+        .exec()
+        .then(doc => {
+            console.log("From database", doc);
+            if (doc) {
+                res.status(200).json(doc);
+            } else {
+                res.status(404).json({ message: 'No valid entry found for provided Alignment and Name' });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: err });
+        });
+});
+
+router.patch('/:alignment/:name', (req, res, next) => {
+    const alignment = req.params.alignment;
+    const name = req.params.name;
     const updateOps = {};
-    for(const ops of req.body){
+
+    for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
     }
 
-    Monster.updateOne({ _id: id }, {
-        $set: updateOps})
+    Monster.updateOne({ alignment: alignment, name: name }, {
+        $set: updateOps
+    })
     .exec()
     .then(result => {
         console.log(result);
@@ -81,14 +104,16 @@ router.patch('/:monsterId', (req, res, next) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({error: err});
+        res.status(500).json({ error: err });
     });
 });
 
 
-router.delete('/:monsterId', (req, res, next) => {
-    const id = req.params.monsterId;
-    Monster.deleteOne({ _id: id })
+
+router.delete('/:alignment/:name', (req, res, next) => {
+    const alignment = req.params.alignment;
+    const name = req.params.name;
+    Monster.deleteOne({ alignment: alignment, name: name })
     .exec()
     .then(result => {
         res.status(200).json(result);

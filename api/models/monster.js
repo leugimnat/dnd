@@ -10,4 +10,13 @@ const monsterSchema = mongoose.Schema({
 
 });
 
+monsterSchema.statics.findByAlignment = function(alignment) {
+    return this.findOne({ alignment: alignment });
+};
+
+monsterSchema.statics.findByAlignmentAndName = function(alignment, name) {
+    return this.findOne({ alignment: alignment, name: name });
+};
+
+
 module.exports = mongoose.model('Monster', monsterSchema);
