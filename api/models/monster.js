@@ -14,9 +14,14 @@ monsterSchema.statics.findByAlignment = function(alignment) {
     return this.findOne({ alignment: alignment });
 };
 
-monsterSchema.statics.findByAlignmentAndName = function(alignment, name) {
-    return this.findOne({ alignment: alignment, name: name });
+monsterSchema.statics.findByMonsterType = function(monsterType) {
+    return this.findOne({ monsterType: monsterType });
 };
+
+monsterSchema.statics.findByMonsterTypeAndName = function(monsterType, name) {
+    return this.findOne({ monsterType: monsterType, name: name });
+};
+
 
 
 module.exports = mongoose.model('Monster', monsterSchema);

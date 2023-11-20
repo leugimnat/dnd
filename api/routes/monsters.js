@@ -50,7 +50,7 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.get('/:alignment', (req, res, next) => {
+router.get('/alignment/:alignment', (req, res, next) => {
     const alignment = req.params.alignment;
     Monster.findByAlignment(alignment).exec().then(doc => { console.log("From database", doc); 
     if (doc) {
@@ -65,11 +65,26 @@ router.get('/:alignment', (req, res, next) => {
     })
 });
 
-router.get('/:alignment/:name', (req, res, next) => {
-    const alignment = req.params.alignment;
+router.get('/monsterType/:monsterType', (req, res, next) => {
+    const monsterType = req.params.monsterType;
+    Monster.findByMonsterType(monsterType).exec().then(doc => { console.log("From database", doc); 
+    if (doc) {
+        res.status(200).json(doc);
+    } else {
+        res.status(404).json({message: 'No valid entry found for provided MonsterType'});
+    }
+})
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({error : err});
+    })
+});
+
+router.get('/:monsterType/:name', (req, res, next) => {
+    const monsterType = req.params.monsterType;
     const name = req.params.name;
 
-    Monster.findByAlignmentAndName(alignment, name)
+    Monster.findByMonsterTypeAndName(monsterType, name)
         .exec()
         .then(doc => {
             console.log("From database", doc);
@@ -85,8 +100,8 @@ router.get('/:alignment/:name', (req, res, next) => {
         });
 });
 
-router.patch('/:alignment/:name', (req, res, next) => {
-    const alignment = req.params.alignment;
+router.patch('/:monsterType/:name', (req, res, next) => {
+    const monsterType = req.params.monsterType;
     const name = req.params.name;
     const updateOps = {};
 
@@ -94,7 +109,7 @@ router.patch('/:alignment/:name', (req, res, next) => {
         updateOps[ops.propName] = ops.value;
     }
 
-    Monster.updateOne({ alignment: alignment, name: name }, {
+    Monster.updateOne({ monsterType: monsterType, name: name }, {
         $set: updateOps
     })
     .exec()
@@ -110,10 +125,10 @@ router.patch('/:alignment/:name', (req, res, next) => {
 
 
 
-router.delete('/:alignment/:name', (req, res, next) => {
-    const alignment = req.params.alignment;
+router.delete('/:monsterType/:name', (req, res, next) => {
+    const monsterType = req.params.monsterType;
     const name = req.params.name;
-    Monster.deleteOne({ alignment: alignment, name: name })
+    Monster.deleteOne({ monsterType: monsterType, name: name })
     .exec()
     .then(result => {
         res.status(200).json(result);
