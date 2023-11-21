@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const Monster = require('../models/monster'); 
 const monster = require('../models/monster');
 
+//get all monsters
 router.get('/', (req, res, next) => 
 {
     Monster.find()
