@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 
 
 const monsterRoutes = require('./api/routes/monsters')
-const orderRoutes = require('./api/routes/orders')
 
 mongoose.connect('mongodb+srv://miguel:tan@dnd.6mndm0z.mongodb.net/?retryWrites=true&w=majority', {
     useNewUrlParser: true,
@@ -34,7 +33,6 @@ app.use((req, res, next) => {
 
 //routes which should handle requests
 app.use('/monsters', monsterRoutes);
-app.use('/orders', orderRoutes);
 
 
 app.use((req, res, next) => {
