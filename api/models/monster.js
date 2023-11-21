@@ -11,11 +11,11 @@ const monsterSchema = mongoose.Schema({
 });
 
 monsterSchema.statics.findByAlignment = function(alignment) {
-    return this.findOne({ alignment: alignment });
+    return this.find({ alignment: alignment });
 };
 
-monsterSchema.statics.findByMonsterType = function(monsterType) {
-    return this.findOne({ monsterType: monsterType });
+monsterSchema.statics.findByMonsterType = function (monsterType) {
+    return this.find({ monsterType: monsterType });
 };
 
 monsterSchema.statics.findByMonsterTypeAndName = function(monsterType, name) {

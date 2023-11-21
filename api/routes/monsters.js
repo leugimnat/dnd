@@ -83,47 +83,60 @@ router.post('/', (req, res, next) => {
 
 router.get('/alignment/:alignment', (req, res, next) => {
     const alignment = req.params.alignment;
-    Monster.findByAlignment(alignment).select('name monsterType alignment hit_points actions')
-    .exec()
-    .then(doc => { 
-        console.log("From database", doc); 
-    if (doc) {
-        res.status(200).json({
-            monster: doc,
-            request: {
-                type: 'GET',
-                url: 'http://localhost:3000/monsters/Alignment/' + alignment
-            
-        }});
-    } else {
-        res.status(404).json({message: 'No valid entry found for provided Alignment'});
-    }
-})
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({error : err});
-    })
+
+    // Use Promise.all to execute both find and count operations concurrently
+    Promise.all([
+        Monster.findByAlignment(alignment).select('name monsterType alignment hit_points actions').exec(),
+        Monster.countDocuments({ alignment: alignment }).exec()
+    ])
+        .then(([docs, count]) => {
+            console.log("From database", docs);
+            if (docs.length > 0) {
+                res.status(200).json({
+                    count: count,
+                    monsters: docs,
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/monsters/alignment/' + alignment
+                    }
+                });
+            } else {
+                res.status(404).json({ message: 'No valid entry found for provided Alignment' });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: err });
+        });
 });
 
 router.get('/monsterType/:monsterType', (req, res, next) => {
     const monsterType = req.params.monsterType;
-    Monster.findByMonsterType(monsterType).select('name monsterType alignment hit_points actions').exec().then(doc => { console.log("From database", doc); 
-    if (doc) {
-        res.status(200).json({
-            monster: doc,
-            request: {
-                type: 'GET',
-                url: 'http://localhost:3000/monsters/monsterType/'+ monsterType
-            
-        }});
-    } else {
-        res.status(404).json({message: 'No valid entry found for provided MonsterType'});
-    }
-})
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({error : err});
-    })
+
+    // Use Promise.all to execute both find and count operations concurrently
+    Promise.all([
+        Monster.findByMonsterType(monsterType).select('name monsterType alignment hit_points actions').exec(),
+        Monster.countDocuments({ monsterType: monsterType }).exec()
+    ])
+        .then(([docs, count]) => {
+            console.log("From database", docs);
+            if (docs.length > 0) {
+                res.status(200).json({
+                    count: count,
+                    monsters: docs,
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/monsters/monsterType/' + monsterType
+                    }
+                });
+            } else {
+                res.status(404).json({ message: 'No valid entry found for provided MonsterType' });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: err });
+        });
 });
 
 router.get('/:monsterType/:name', (req, res, next) => {
