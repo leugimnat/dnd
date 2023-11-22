@@ -4,8 +4,13 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const jwt = require('jsonwebtoken');
 
-const monsterRoutes = require('./api/routes/monsters')
+
+const monsterRoutes = require('./api/routes/monsters');
+const userRoutes = require('./api/routes/users');
+const loginRoutes = require('./api/routes/login');
+const registerRoutes = require('./api/routes/register');
 
 mongoose.connect('mongodb+srv://miguel:tan@dnd.6mndm0z.mongodb.net/?retryWrites=true&w=majority', {
     useNewUrlParser: true,
@@ -33,6 +38,9 @@ app.use((req, res, next) => {
 
 //routes which should handle requests
 app.use('/monsters', monsterRoutes);
+app.use('/users', userRoutes);
+app.use('/login', loginRoutes);
+app.use('/register', registerRoutes);
 
 
 app.use((req, res, next) => {

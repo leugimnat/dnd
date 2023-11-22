@@ -3,9 +3,28 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 const Monster = require('../models/monster'); 
+const jwt = require('jsonwebtoken');
+
+const authenticateJWT = (req, res, next) => {
+    const token = req.header('Token');
+
+    if (!token) {
+        return res.status(401).json({message: "Unauthorized"});
+    } 
+
+    jwt.verify(token, 'yourSecretKey', (err, user) => {
+        if (err) {
+            return res.status(403).json({message: 'Forbidden'});
+        }
+
+        req.user = user;
+
+        next();
+    });
+}
 
 //get all monsters
-router.get('/', (req, res, next) => 
+router.get('/', authenticateJWT, async (req, res, next) => 
 {
     Monster.find()
     .select('name monsterType alignment hit_points actions')
