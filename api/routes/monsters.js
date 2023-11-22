@@ -65,7 +65,7 @@ router.get('/', authenticateJWT, async (req, res, next) =>
 }
 )
  
-router.post('/', (req, res, next) => {
+router.post('/', authenticateJWT, async (req, res, next) => {
     const monster = new Monster({
         _id: new mongoose.Types.ObjectId(),
         monsterType: req.body.monsterType,
@@ -99,7 +99,7 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.get('/alignment/:alignment', (req, res, next) => {
+router.get('/alignment/:alignment', authenticateJWT, async (req, res, next) => {
     const alignment = req.params.alignment;
 
     // Use Promise.all to execute both find and count operations concurrently
@@ -128,7 +128,7 @@ router.get('/alignment/:alignment', (req, res, next) => {
         });
 });
 
-router.get('/monsterType/:monsterType', (req, res, next) => {
+router.get('/monsterType/:monsterType', authenticateJWT, async (req, res, next) => {
     const monsterType = req.params.monsterType;
 
     // Use Promise.all to execute both find and count operations concurrently
@@ -157,7 +157,7 @@ router.get('/monsterType/:monsterType', (req, res, next) => {
         });
 });
 
-router.get('/:monsterType/:name', (req, res, next) => {
+router.get('/:monsterType/:name', authenticateJWT, async (req, res, next) => {
     const monsterType = req.params.monsterType;
     const name = req.params.name;
 
@@ -183,7 +183,7 @@ router.get('/:monsterType/:name', (req, res, next) => {
         });
 });
 
-router.patch('/:monsterType/:name', (req, res, next) => {
+router.patch('/:monsterType/:name', authenticateJWT, async (req, res, next) => {
     const monsterType = req.params.monsterType;
     const name = req.params.name;
     const updateOps = {};
@@ -214,7 +214,7 @@ router.patch('/:monsterType/:name', (req, res, next) => {
 
 
 
-router.delete('/:monsterType/:name', (req, res, next) => {
+router.delete('/:monsterType/:name', authenticateJWT, async (req, res, next) => {
     const monsterType = req.params.monsterType;
     const name = req.params.name;
     Monster.deleteOne({ monsterType: monsterType, name: name })
